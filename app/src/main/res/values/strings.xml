@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Myweather</string>
+    <string name="search_hint">请输入你所在的城市名（长春）</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 </resources>

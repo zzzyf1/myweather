@@ -3,10 +3,11 @@ package com.example.zyf.myweather.db;
 import org.litepal.crud.DataSupport;
 
 public class City extends DataSupport {
-    private int id;
-    private String cityName;
-    private String cityCode;
-    private int provinceId;
+    //缓存的数据较少，就不考虑冗余了
+    private int id;//县的id,用来请求天气
+    private String cityZh;//县的名字
+    private String leaderZh;//市的名字
+    private String provinceZh;//省的名字
 
     public int getId() {
         return id;
@@ -16,27 +17,27 @@ public class City extends DataSupport {
         this.id = id;
     }
 
-    public String getCityName() {
-        return cityName;
+    public String getCityZh() {
+        return cityZh;
     }
 
-    public void setCityName(String cityName) {
-        this.cityName = cityName;
+    public void setCityZh(String cityZh) {
+        this.cityZh = cityZh;
     }
 
-    public String getCityCode() {
-        return cityCode;
+    public String getLeaderZh() {
+        return leaderZh;
     }
 
-    public void setCityCode(String cityCode) {
-        this.cityCode = cityCode;
+    public void setLeaderZh(String leaderZh) {
+        this.leaderZh = leaderZh;
     }
 
-    public int getProvinceId() {
-        return provinceId;
+    public String getProvinceZh() {
+        return provinceZh;
     }
 
-    public void setProvinceId(int provinceId) {
-        this.provinceId = provinceId;
+    public void setProvinceZh(String provinceZh) {
+        this.provinceZh = provinceZh;
     }
 }
