@@ -3,6 +3,7 @@ package com.example.zyf.myweather;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -11,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +20,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.zyf.myweather.util.HttpUtil;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+import com.example.zyf.myweather.util.*;
+import com.example.zyf.myweather.gson.*;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -35,6 +48,7 @@ public class HomeActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private Weather weather;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +66,7 @@ public class HomeActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,8 +74,70 @@ public class HomeActivity extends AppCompatActivity {
                 /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                         */
-                Intent intent=new Intent(HomeActivity.this,SearchActivity.class);
+                /*Intent intent=new Intent(HomeActivity.this,SearchActivity.class);
                 startActivity(intent);
+                */
+                HttpUtil.sendOkHttpRequest("https://www.tianqiapi.com/api/?version=v1&cityid=101110101", new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        HomeActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(HomeActivity.this,"无法获得json数据",Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String responseText=response.body().string();
+                        if(!responseText.isEmpty()){
+                            weather=resolveJsonWeather.resolveWeather(responseText);
+                            if(weather!=null){
+                                HomeActivity.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(HomeActivity.this,"GSON解析成功",Toast.LENGTH_SHORT).show();
+                                        Log.d("HomeActivity",String .valueOf(weather.cityid));
+                                        Log.d("HomeActivity",weather.update_time);
+                                        Log.d("HomeActivity",weather.city);
+                                        Log.d("HomeActivity",weather.country);
+                                        for(int i=0;i<weather.data.size();i++){
+                                            Day day=weather.data.get(i);
+                                            Log.d("HomeActivity",day.day);
+                                            Log.d("HomeActivity",day.date);
+                                            Log.d("HomeActivity",day.week);
+                                            Log.d("HomeActivity",day.wea_img);
+                                            Log.d("HomeActivity",String.valueOf(day.air));
+                                            Log.d("HomeActivity",String.valueOf(day.humidity));
+                                            Log.d("HomeActivity",day.tem);
+                                            Log.d("HomeActivity",day.win.get(0));
+                                            Log.d("HomeActivity",day.hours.get(1).win_speed);
+                                            Log.d("HomeActivity",day.index.get(1).desc);
+                                            Log.d("HomeActivity","\n\n");
+                                        }
+                                    }
+                                });
+                            }else{
+                                HomeActivity.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(HomeActivity.this,"GSON解析失败",Toast.LENGTH_SHORT).show();
+
+                                    }
+                                });
+                            }
+                        }else{
+                            HomeActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(HomeActivity.this,"json数据返回为空值",Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+
+                    }
+                });
             }
         });
 
