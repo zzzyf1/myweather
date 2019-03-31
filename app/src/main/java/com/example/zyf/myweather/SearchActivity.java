@@ -1,9 +1,11 @@
 package com.example.zyf.myweather;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -33,6 +35,7 @@ public class SearchActivity extends AppCompatActivity {
     private EditText myEditText;
     private ImageButton myImageButton;
     private ProgressBar progressBar;
+    public  String WeatherID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,18 @@ public class SearchActivity extends AppCompatActivity {
         * EditText的getText()方法只能在监听事件中才能够实现
         * searchCity=myEditText.getText().toString();
         * */
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                WeatherID=cityList.get(position).getWeather_id();
+                Intent intent=new Intent(SearchActivity.this,HomeActivity.class);
+                intent.putExtra("weather",WeatherID);
+                intent.putExtra("cityName",searchCity);
+                startActivity(intent);
+                SearchActivity.this.finish();
+
+            }
+        });
         myImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,6 +144,7 @@ public class SearchActivity extends AppCompatActivity {
             //装载listItem数据
             for(City city : cityList){
                 dataList.add(" "+city.getCityZh()+"--"+city.getLeaderZh()+"--"+city.getProvinceZh());
+                //Log.d("SearchActivity",String.valueOf(city.getId()));
             }
             adapter.notifyDataSetChanged();
             listView.setSelection(0);

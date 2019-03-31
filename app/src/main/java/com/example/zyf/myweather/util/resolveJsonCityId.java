@@ -24,13 +24,17 @@ public class resolveJsonCityId
                         {
                             //将查询结果缓存到数据库中
                             try{
-                                Log.d("resolveJsonCityId",cityObject.getString("cityZh")+"   "+cityObject.getString("leaderZh"));
                                 City city=new City();
                                 city.setId(cityObject.getInt("id"));
+                                city.setWeather_id(String.valueOf(cityObject.getInt("id")));
+                                //Log.d("resolveJsonCityId",cityObject.getInt("id"));
                                 city.setCityZh(cityObject.getString("cityZh"));//县名
                                 city.setLeaderZh(cityObject.getString("leaderZh"));//市名
                                 city.setProvinceZh(cityObject.getString("provinceZh"));//省名
                                 city.save();
+                                Log.d("resolveJsonCityId",cityObject.getString("cityZh")+"   "+cityObject.getString("leaderZh"));
+                                Log.d("resolveJsonCityId",city.getWeather_id());
+
                                 //symbol=2;
                             }catch (Exception e){
                                 e.printStackTrace();

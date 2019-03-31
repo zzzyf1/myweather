@@ -9,11 +9,11 @@ public class Day {
     public String week;
     public String wea;//当前天气情况
     public String wea_img;
-    public int air;
-    public int humidity;
+    public String air;
+    public String humidity;
     public String air_level;
     public String air_tips;
-    public List<String> alarm;//7天接口里边此项为空
+    //public List<String> alarm;//7天接口里边此项为空,后来发现并不是每个城市都为空，进而引起了bug,导致有些城市查不出来
     public String tem1;//高温,白天温度
     public String tem2;//低温,晚上温度
     public String tem;//当前温度
