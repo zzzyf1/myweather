@@ -1,7 +1,8 @@
 <litepal>
     <dbname value="weather"/>
-    <version value="3"/>
+    <version value="4"/>
     <list>
         <mapping class="com.example.zyf.myweather.db.City"/>
+        <mapping class="com.example.zyf.myweather.db.User"/>
     </list>
 </litepal>
