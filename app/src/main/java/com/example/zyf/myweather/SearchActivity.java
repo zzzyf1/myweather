@@ -46,6 +46,7 @@ public class SearchActivity extends AppCompatActivity {
     public static SharedPreferences.Editor editor;
     public static SearchActivity instance;//全局获取HomeActivity实例
     private Intent intent;
+    private List<User> list;//用于向HomeActivity传递返回后应该默认显示哪一页
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +63,7 @@ public class SearchActivity extends AppCompatActivity {
         myEditText=findViewById(R.id.editText2);
         listView=findViewById(R.id.listview);
         progressBar=findViewById(R.id.progressBar2);
+
         adapter=new ArrayAdapter<>(SearchActivity.this,android.R.layout.simple_list_item_1,dataList);
         listView.setAdapter(adapter);
         /**
@@ -78,7 +80,9 @@ public class SearchActivity extends AppCompatActivity {
                      * 2、请求数据，写进Preferences*/
                     User user=new User();
                     user.setWeatherId(WeatherID);
+                    user.setCity(myEditText.getText().toString());
                     user.save();
+                    list=DataSupport.findAll(User.class);
                     if(progressBar.getVisibility()==View.GONE){
                         progressBar.setVisibility(View.VISIBLE);
                     }
@@ -240,10 +244,11 @@ public class SearchActivity extends AppCompatActivity {
                                     if(progressBar.getVisibility()==View.VISIBLE){
                                         progressBar.setVisibility(View.GONE);
                                     }
-                                    intent.putExtra("weather",WeatherID);
-                                    intent.putExtra("cityName",searchCity);
+                                    intent.putExtra("current_number",list.size());
                                     startActivity(intent);
                                     SearchActivity.this.finish();
+                                }else{
+                                    //此处还得添加用来增强健壮性
                                 }
                                 //Toast.makeText(getInstance(),"GSON解析成功",Toast.LENGTH_SHORT).show();
                                 Log.d("HomeActivityRequest-->",String.valueOf(weather.cityid));
